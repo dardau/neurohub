@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import AppImage from '@/components/ui/AppImage';
+import SpeechDemoModal from '@/app/components/SpeechDemoModal';
 
 const stats = [
 { value: '$52B', label: 'Объём рынка', sub: 'глобально' },
@@ -11,6 +12,7 @@ const stats = [
 
 
 export default function HeroSection() {
+  const [speechDemoOpen, setSpeechDemoOpen] = useState(false);
   const blobRef1 = useRef<HTMLDivElement>(null);
   const blobRef2 = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLElement>(null);
@@ -34,6 +36,7 @@ export default function HeroSection() {
   }, []);
 
   return (
+    <>
     <section
       id="hero"
       ref={containerRef}
@@ -76,12 +79,12 @@ export default function HeroSection() {
             </p>
 
             <div className="flex flex-wrap gap-4 pt-2">
-              <a href="#pricing" className="btn-primary">
+              <button onClick={() => setSpeechDemoOpen(true)} className="btn-primary">
                 Попробовать бесплатно
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
-              </a>
+              </button>
               <a href="#solution" className="btn-outline">
                 Узнать больше
               </a>
@@ -150,6 +153,9 @@ export default function HeroSection() {
           </div>
         </div>
       </div>
-    </section>);
+    </section>
+
+    {speechDemoOpen && <SpeechDemoModal onClose={() => setSpeechDemoOpen(false)} />}
+    </>);
 
 }

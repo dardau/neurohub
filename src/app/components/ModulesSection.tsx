@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import AppImage from '@/components/ui/AppImage';
+import CognitiveGameModal from '@/app/components/CognitiveGameModal';
 
 const modules = [
 {
@@ -34,6 +35,7 @@ const modules = [
 
 
 export default function ModulesSection() {
+  const [cognitiveGameOpen, setCognitiveGameOpen] = useState(false);
   const rowsRef = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
@@ -99,6 +101,18 @@ export default function ModulesSection() {
                     </div>
                 )}
                 </div>
+                {mod.tag === 'Cognitive AI' && (
+                  <button
+                    onClick={() => setCognitiveGameOpen(true)}
+                    className="btn-primary w-fit mt-2"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Сыграть в демо
+                  </button>
+                )}
               </div>
 
               {/* Visual */}
@@ -130,6 +144,7 @@ export default function ModulesSection() {
           )}
         </div>
       </div>
+      {cognitiveGameOpen && <CognitiveGameModal onClose={() => setCognitiveGameOpen(false)} />}
     </section>);
 
 }

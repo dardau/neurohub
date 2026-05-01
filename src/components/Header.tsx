@@ -69,7 +69,7 @@ export default function Header() {
           <a href="#pricing" className="btn-outline text-sm py-2.5 px-5">
             Войти
           </a>
-          <a href="#pricing" className="btn-primary text-sm py-2.5 px-5">
+          <a href="#hero" className="btn-primary text-sm py-2.5 px-5">
             Попробовать бесплатно
           </a>
         </div>
@@ -115,7 +115,7 @@ export default function Header() {
             <a href="#pricing" className="btn-outline text-center" onClick={handleNavClick}>
               Войти
             </a>
-            <a href="#pricing" className="btn-primary justify-center" onClick={handleNavClick}>
+            <a href="#hero" className="btn-primary justify-center" onClick={handleNavClick}>
               Попробовать бесплатно
             </a>
           </div>
