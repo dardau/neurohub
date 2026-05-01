@@ -1,21 +1,6 @@
 import React from 'react';
 import type { Metadata, Viewport } from 'next';
-import { DM_Sans, Fraunces } from 'next/font/google';
 import '../styles/tailwind.css';
-
-const dmSans = DM_Sans({
-  subsets: ['latin', 'latin-ext'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-dm-sans',
-  display: 'swap',
-});
-
-const fraunces = Fraunces({
-  subsets: ['latin'],
-  weight: ['400', '600', '700', '900'],
-  variable: '--font-fraunces',
-  display: 'swap',
-});
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -41,10 +26,15 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="ru" className={`${dmSans.variable} ${fraunces.variable}`}>
-      <body className={dmSans.className}>
+    <html lang="ru">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+      </head>
+      <body>
         {children}
-</body>
+      </body>
     </html>
   );
 }
