@@ -1,19 +1,12 @@
 import React from 'react';
 import type { Metadata, Viewport } from 'next';
-import { DM_Sans, Fraunces } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import '../styles/tailwind.css';
 
-const dmSans = DM_Sans({
-  subsets: ['latin', 'latin-ext'],
+const inter = Inter({
+  subsets: ['latin', 'cyrillic'],
   weight: ['400', '500', '600', '700'],
-  variable: '--font-dm-sans',
-  display: 'swap',
-});
-
-const fraunces = Fraunces({
-  subsets: ['latin'],
-  weight: ['400', '600', '700', '900'],
-  variable: '--font-fraunces',
+  variable: '--font-inter',
   display: 'swap',
 });
 
@@ -24,15 +17,16 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
-  title: 'NeuroHub AI — AI-реабилитация детей с ЗРР, ЗПР, РАС',
+  title: 'NeuroHub AI — Phygital-реабилитация детей с РАС, СДВГ, ЗПР',
   description:
-    'NeuroHub AI — первая AI-платформа персонализированной реабилитации для детей с ЗРР, ЗПР, РАС и ДЦП на рынке СНГ. Геймификация, аналитика, удалённый доступ.',
+    'Phygital-экосистема для непрерывной реабилитации. Заполняем 165 часов терапевтического вакуума. KZ/RU, Computer Vision, пилот для клиник.',
   icons: {
     icon: [{ url: '/favicon.ico', type: 'image/x-icon' }],
   },
   openGraph: {
-    title: 'NeuroHub AI — AI-реабилитация детей',
-    description: 'AI-платформа для детей с ЗРР, ЗПР, РАС и ДЦП. Персонализированные программы, геймификация, аналитика в реальном времени.',
+    title: 'NeuroHub AI — Phygital-реабилитация',
+    description:
+      'Единый цифровой мост между врачом, родителем и ребёнком. Пилотное тестирование.',
     images: [{ url: '/assets/images/app_logo.png', width: 1200, height: 630 }],
   },
 };
@@ -41,10 +35,8 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="ru" className={`${dmSans.variable} ${fraunces.variable}`}>
-      <body className={dmSans.className}>
-        {children}
-</body>
+    <html lang="ru" className={inter.variable}>
+      <body className={inter.className}>{children}</body>
     </html>
   );
 }

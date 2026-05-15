@@ -1,59 +1,39 @@
 import React from 'react';
+
 import AppLogo from '@/components/ui/AppLogo';
+import ContactLinks from '@/components/ContactLinks';
 
 export default function Footer() {
   return (
-    <footer className="border-t border-border bg-white pt-14 pb-10">
-      <div className="max-w-7xl mx-auto px-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-10">
-        {/* Left: Logo + tagline */}
-        <div className="flex flex-col gap-3">
+    <footer className="border-t border-border bg-white py-12">
+      <div className="max-w-7xl mx-auto px-5">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 pb-8 border-b border-border">
           <div className="flex items-center gap-2">
-            <AppLogo size={32} />
-            <span className="font-display text-lg font-bold text-foreground">NeuroHub AI</span>
+            <AppLogo size={28} />
+            <span className="text-base font-semibold text-foreground">NeuroHub AI</span>
           </div>
-          <p className="text-sm text-muted-foreground max-w-xs">
-            AI-реабилитация для детей с ЗРР, ЗПР, РАС и ДЦП.
-          </p>
-        </div>
 
-        {/* Right: Links */}
-        <nav className="flex flex-wrap gap-x-8 gap-y-3">
-          {[
-            { label: 'Решение', href: '#solution' },
-            { label: 'Модули', href: '#modules' },
-            { label: 'Тарифы', href: '#pricing' },
-            { label: 'Конфиденциальность', href: '#' },
-            { label: 'Условия', href: '#' },
-          ]?.map((link) => (
-            <a
-              key={link?.href + link?.label}
-              href={link?.href}
-              className="text-sm font-500 text-muted-foreground hover:text-foreground transition-colors"
-            >
-              {link?.label}
+          <ContactLinks variant="prominent" direction="col" />
+
+          <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground">
+            <a href="#contacts" className="hover:text-foreground transition-colors">
+              Контакты
             </a>
-          ))}
-        </nav>
-
-        {/* Social + copyright */}
-        <div className="flex flex-col items-start md:items-end gap-3">
-          <div className="flex items-center gap-4">
-            {[
-              { label: 'Telegram', href: '#' },
-              { label: 'WhatsApp', href: '#' },
-              { label: 'Instagram', href: '#' },
-            ]?.map((s) => (
-              <a
-                key={s?.label}
-                href={s?.href}
-                className="text-sm font-600 text-muted-foreground hover:text-primary transition-colors min-h-[44px] flex items-center"
-              >
-                {s?.label}
-              </a>
-            ))}
-          </div>
-          <p className="text-xs text-muted-foreground">© 2026 NeuroHub AI. Все права защищены.</p>
+            <a href="#ecosystem" className="hover:text-foreground transition-colors">
+              Экосистема
+            </a>
+            <a href="#cta" className="hover:text-foreground transition-colors">
+              Пилот
+            </a>
+            <a href="#" className="hover:text-foreground transition-colors">
+              Конфиденциальность
+            </a>
+          </nav>
         </div>
+
+        <p className="text-xs text-muted-foreground mt-6">
+          © 2026 NeuroHub AI. Phygital-реабилитация для детей с РАС, СДВГ и ЗПР.
+        </p>
       </div>
     </footer>
   );

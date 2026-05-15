@@ -3,13 +3,13 @@
 import React, { useState, useEffect } from 'react';
 
 import AppLogo from '@/components/ui/AppLogo';
+import { CONTACTS } from '@/lib/contacts';
 
 const navLinks = [
   { label: 'Проблема', href: '#problem' },
-  { label: 'Решение', href: '#solution' },
+  { label: 'Экосистема', href: '#ecosystem' },
   { label: 'Модули', href: '#modules' },
-  { label: 'Возможности', href: '#features' },
-  { label: 'Тарифы', href: '#pricing' },
+  { label: 'Инвесторам', href: '#cta' },
 ];
 
 export default function Header() {
@@ -17,106 +17,116 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handler = () => setScrolled(window.scrollY > 60);
+    const handler = () => setScrolled(window.scrollY > 40);
     window.addEventListener('scroll', handler, { passive: true });
     return () => window.removeEventListener('scroll', handler);
   }, []);
 
   useEffect(() => {
-    if (menuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    return () => {
       document.body.style.overflow = '';
-    }
-    return () => { document.body.style.overflow = ''; };
+    };
   }, [menuOpen]);
 
-  const handleNavClick = () => setMenuOpen(false);
+  const closeMenu = () => setMenuOpen(false);
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-white/90 backdrop-blur-xl shadow-sm border-b border-border py-3'
-          : 'bg-transparent py-5'
+          ? 'bg-white/95 backdrop-blur-md shadow-sm border-b border-border py-3'
+          : 'bg-white/70 backdrop-blur-sm py-4'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-5 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <AppLogo
-            size={36}
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          />
-          <span className="font-display text-xl font-bold text-foreground tracking-tight hidden sm:block">
+      <div className="max-w-7xl mx-auto px-5 grid grid-cols-[auto_1fr_auto] items-center gap-4 xl:grid-cols-[1fr_auto_1fr]">
+        <div className="flex items-center gap-2 xl:justify-self-start">
+          <AppLogo size={36} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} />
+          <span className="text-lg font-semibold text-foreground tracking-tight hidden sm:block">
             NeuroHub AI
           </span>
         </div>
 
-        {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-7">
-          {navLinks?.map((link) => (
+        <nav className="hidden xl:flex items-center justify-center gap-8">
+          {navLinks.map((link) => (
             <a
-              key={link?.href}
-              href={link?.href}
-              className="text-sm font-600 text-muted-foreground hover:text-primary transition-colors duration-200"
+              key={link.href}
+              href={link.href}
+              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
             >
-              {link?.label}
+              {link.label}
             </a>
           ))}
         </nav>
 
-        <div className="hidden md:flex items-center gap-3">
-          <a href="#pricing" className="btn-outline text-sm py-2.5 px-5">
-            Войти
+        <div className="hidden lg:flex items-center gap-4 justify-self-end">
+          <a
+            href={`tel:${CONTACTS.phoneTel}`}
+            className="text-sm font-semibold text-primary hover:underline hidden xl:inline"
+          >
+            {CONTACTS.phoneDisplay}
           </a>
-          <a href="#hero" className="btn-primary text-sm py-2.5 px-5">
-            Попробовать бесплатно
+          <a href="#cta" className="btn-ghost text-sm">
+            Вход
+          </a>
+          <a href="#cta" className="btn-primary text-sm py-2.5 px-5">
+            Ранний доступ
           </a>
         </div>
 
-        {/* Hamburger */}
         <button
-          className="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 rounded-xl border border-border bg-white/80 backdrop-blur"
+          type="button"
+          className="lg:hidden justify-self-end flex flex-col justify-center items-center w-10 h-10 gap-1.5 rounded-lg border border-border bg-white"
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label={menuOpen ? 'Закрыть меню' : 'Открыть меню'}
         >
           <span
-            className={`block w-5 h-0.5 bg-foreground transition-all duration-300 ${menuOpen ? 'rotate-45 translate-y-2' : ''}`}
+            className={`block w-5 h-0.5 bg-foreground transition-all ${menuOpen ? 'rotate-45 translate-y-2' : ''}`}
           />
           <span
-            className={`block w-5 h-0.5 bg-foreground transition-all duration-300 ${menuOpen ? 'opacity-0' : ''}`}
+            className={`block w-5 h-0.5 bg-foreground transition-all ${menuOpen ? 'opacity-0' : ''}`}
           />
           <span
-            className={`block w-5 h-0.5 bg-foreground transition-all duration-300 ${menuOpen ? '-rotate-45 -translate-y-2' : ''}`}
+            className={`block w-5 h-0.5 bg-foreground transition-all ${menuOpen ? '-rotate-45 -translate-y-2' : ''}`}
           />
         </button>
       </div>
-      {/* Mobile overlay */}
+
       {menuOpen && (
         <div
-          className="fixed inset-0 top-0 z-40 bg-white/95 backdrop-blur-xl flex flex-col items-center justify-center gap-8 md:hidden"
-          onClick={handleNavClick}
+          className="fixed inset-0 z-40 bg-white flex flex-col items-center justify-center gap-6 md:hidden"
+          onClick={closeMenu}
         >
-          <div className="flex items-center gap-2 absolute top-5 left-5">
+          <div className="absolute top-5 left-5 flex items-center gap-2">
             <AppLogo size={32} />
-            <span className="font-display text-lg font-bold">NeuroHub AI</span>
+            <span className="text-lg font-semibold">NeuroHub AI</span>
           </div>
-          {navLinks?.map((link) => (
+          {navLinks.map((link) => (
             <a
-              key={link?.href}
-              href={link?.href}
-              className="text-2xl font-display font-bold text-foreground hover:text-primary transition-colors"
-              onClick={handleNavClick}
+              key={link.href}
+              href={link.href}
+              className="text-xl font-semibold text-foreground hover:text-primary"
+              onClick={closeMenu}
             >
-              {link?.label}
+              {link.label}
             </a>
           ))}
-          <div className="flex flex-col gap-3 w-56 mt-4">
-            <a href="#pricing" className="btn-outline text-center" onClick={handleNavClick}>
-              Войти
+          <div className="flex flex-col gap-2 text-center">
+            <a href={`tel:${CONTACTS.phoneTel}`} className="text-lg font-semibold text-primary">
+              {CONTACTS.phoneDisplay}
             </a>
-            <a href="#hero" className="btn-primary justify-center" onClick={handleNavClick}>
-              Попробовать бесплатно
+            <a
+              href={CONTACTS.telegramUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-lg font-semibold text-primary"
+            >
+              {CONTACTS.telegramHandle}
+            </a>
+          </div>
+          <div className="flex flex-col gap-3 w-56 mt-2">
+            <a href="#cta" className="btn-primary justify-center" onClick={closeMenu}>
+              Ранний доступ
             </a>
           </div>
         </div>
