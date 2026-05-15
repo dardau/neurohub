@@ -12,7 +12,7 @@ export default function Footer() {
             <span className="font-display text-lg font-bold text-foreground">NeuroHub AI</span>
           </div>
           <p className="text-sm text-muted-foreground max-w-xs">
-            AIiiiii-реабилитация для детей с ЗРР, ЗПР, РАС и ДЦП.
+            AI-реабилитация для детей с ЗРР, ЗПР, РАС и ДЦП.
           </p>
         </div>
 
