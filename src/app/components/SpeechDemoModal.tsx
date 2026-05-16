@@ -2,6 +2,25 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 
+type SpeechRecognitionResultLike = {
+  results: { 0: { 0: { transcript: string } } & ArrayLike<{ transcript: string }> } & ArrayLike<
+    ArrayLike<{ transcript: string }>
+  >;
+};
+
+type SpeechRecognitionLike = {
+  lang: string;
+  interimResults: boolean;
+  maxAlternatives: number;
+  start: () => void;
+  abort: () => void;
+  onresult: ((e: SpeechRecognitionResultLike) => void) | null;
+  onerror: (() => void) | null;
+  onend: (() => void) | null;
+};
+
+type SpeechRecognitionCtor = new () => SpeechRecognitionLike;
+
 type Phase = 'idle' | 'recording' | 'analyzing' | 'result';
 
 interface SpeechResult {
@@ -43,7 +62,8 @@ function scoreTranscript(transcript: string): SpeechResult {
     tip = 'Отличное произношение! Звуки чёткие и ритм хороший. Продолжай в том же духе.';
     phonemes = ['При-', 'вет'];
   } else if (score >= 65) {
-    tip = 'Хороший результат. Обрати внимание на мягкий знак в конце — «привет» заканчивается чётко.';
+    tip =
+      'Хороший результат. Обрати внимание на мягкий знак в конце — «привет» заканчивается чётко.';
     phonemes = ['При-', 'вет ⚠'];
   } else {
     tip = 'Попробуй ещё раз — говори чуть медленнее и чётче. Разбей на слоги: «при-вет, при-вет».';
@@ -65,7 +85,7 @@ export default function SpeechDemoModal({ onClose }: Props) {
   const [recordingSeconds, setRecordingSeconds] = useState(0);
   const [error, setError] = useState<string | null>(null);
 
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
   const animFrameRef = useRef<number | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -78,14 +98,21 @@ export default function SpeechDemoModal({ onClose }: Props) {
     if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
     if (streamRef.current) streamRef.current.getTracks().forEach((t) => t.stop());
     if (recognitionRef.current) {
-      try { recognitionRef.current.abort(); } catch {}
+      try {
+        recognitionRef.current.abort();
+      } catch {}
     }
   }, []);
 
   useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
     window.addEventListener('keydown', handleKey);
-    return () => { window.removeEventListener('keydown', handleKey); cleanup(); };
+    return () => {
+      window.removeEventListener('keydown', handleKey);
+      cleanup();
+    };
   }, [onClose, cleanup]);
 
   const animateAudio = useCallback(() => {
@@ -129,9 +156,11 @@ export default function SpeechDemoModal({ onClose }: Props) {
     }, 1000);
 
     // Speech Recognition
-    const SpeechRecognitionAPI =
-      (window as typeof window & { SpeechRecognition?: typeof SpeechRecognition; webkitSpeechRecognition?: typeof SpeechRecognition }).SpeechRecognition ||
-      (window as typeof window & { webkitSpeechRecognition?: typeof SpeechRecognition }).webkitSpeechRecognition;
+    const win = window as typeof window & {
+      SpeechRecognition?: SpeechRecognitionCtor;
+      webkitSpeechRecognition?: SpeechRecognitionCtor;
+    };
+    const SpeechRecognitionAPI = win.SpeechRecognition || win.webkitSpeechRecognition;
 
     if (!SpeechRecognitionAPI) {
       // Fallback — simulate result
@@ -151,7 +180,7 @@ export default function SpeechDemoModal({ onClose }: Props) {
     rec.maxAlternatives = 1;
     recognitionRef.current = rec;
 
-    rec.onresult = (e: SpeechRecognitionEvent) => {
+    rec.onresult = (e: SpeechRecognitionResultLike) => {
       const transcript = e.results[0][0].transcript;
       cleanup();
       setPhase('analyzing');
@@ -181,7 +210,11 @@ export default function SpeechDemoModal({ onClose }: Props) {
       }
     };
 
-    try { rec.start(); } catch { /* already started */ }
+    try {
+      rec.start();
+    } catch {
+      /* already started */
+    }
   }, [animateAudio, cleanup, phase]);
 
   const stopRecording = useCallback(() => {
@@ -226,16 +259,16 @@ export default function SpeechDemoModal({ onClose }: Props) {
     ? result.score >= 85
       ? '#02C39A'
       : result.score >= 65
-      ? '#F59E0B'
-      : '#EF4444'
+        ? '#F59E0B'
+        : '#EF4444'
     : '#028090';
 
   const scoreLabel = result
     ? result.score >= 85
       ? 'Отлично!'
       : result.score >= 65
-      ? 'Хорошо'
-      : 'Старайся!'
+        ? 'Хорошо'
+        : 'Старайся!'
     : '';
 
   return (
@@ -264,7 +297,12 @@ export default function SpeechDemoModal({ onClose }: Props) {
             aria-label="Закрыть"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
@@ -272,7 +310,9 @@ export default function SpeechDemoModal({ onClose }: Props) {
         <div className="px-8 pb-8">
           {/* Target phrase */}
           <div className="bg-secondary rounded-2xl px-5 py-4 mb-6 text-center">
-            <p className="text-xs text-muted-foreground mb-1 font-600 uppercase tracking-wider">Произнеси фразу</p>
+            <p className="text-xs text-muted-foreground mb-1 font-600 uppercase tracking-wider">
+              Произнеси фразу
+            </p>
             <p className="font-display text-3xl font-900 text-primary">«{TARGET_PHRASE}»</p>
           </div>
 
@@ -280,17 +320,35 @@ export default function SpeechDemoModal({ onClose }: Props) {
           {phase === 'idle' && (
             <div className="flex flex-col items-center gap-5">
               <div className="w-24 h-24 rounded-full bg-secondary flex items-center justify-center">
-                <svg className="w-10 h-10 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                <svg
+                  className="w-10 h-10 text-primary"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
+                  />
                 </svg>
               </div>
               <p className="text-sm text-muted-foreground text-center max-w-xs">
                 Нажми кнопку и скажи фразу вслух. Система оценит твоё произношение через AI.
               </p>
               {error && <p className="text-xs text-red-500 text-center">{error}</p>}
-              <button onClick={startWithCountdown} className="btn-primary w-full justify-center py-4 text-base">
+              <button
+                onClick={startWithCountdown}
+                className="btn-primary w-full justify-center py-4 text-base"
+              >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
+                  />
                 </svg>
                 Начать запись
               </button>
@@ -319,7 +377,11 @@ export default function SpeechDemoModal({ onClose }: Props) {
                       }}
                     />
                     <div className="w-24 h-24 rounded-full bg-red-50 border-4 border-red-400 flex items-center justify-center z-10">
-                      <svg className="w-10 h-10 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                      <svg
+                        className="w-10 h-10 text-red-500"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
                         <path d="M12 1a4 4 0 014 4v7a4 4 0 01-8 0V5a4 4 0 014-4zm0 18a7 7 0 007-7h-2a5 5 0 01-10 0H5a7 7 0 007 7zm0 2v2H9v2h6v-2h-3z" />
                       </svg>
                     </div>
@@ -358,9 +420,24 @@ export default function SpeechDemoModal({ onClose }: Props) {
           {phase === 'analyzing' && (
             <div className="flex flex-col items-center gap-5 py-4">
               <div className="w-24 h-24 rounded-full bg-secondary flex items-center justify-center">
-                <svg className="w-10 h-10 text-primary animate-spin" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                <svg
+                  className="w-10 h-10 text-primary animate-spin"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                  />
                 </svg>
               </div>
               <div className="text-center">
@@ -384,8 +461,12 @@ export default function SpeechDemoModal({ onClose }: Props) {
             <div className="flex flex-col gap-5">
               {/* Transcript */}
               <div className="bg-muted rounded-2xl px-5 py-4">
-                <p className="text-xs text-muted-foreground font-600 uppercase tracking-wider mb-1">Ты сказал</p>
-                <p className="font-display text-xl font-700 text-foreground">«{result.transcript}»</p>
+                <p className="text-xs text-muted-foreground font-600 uppercase tracking-wider mb-1">
+                  Ты сказал
+                </p>
+                <p className="font-display text-xl font-700 text-foreground">
+                  «{result.transcript}»
+                </p>
               </div>
 
               {/* Score */}
@@ -394,7 +475,9 @@ export default function SpeechDemoModal({ onClose }: Props) {
                   <svg className="w-20 h-20 -rotate-90" viewBox="0 0 80 80">
                     <circle cx="40" cy="40" r="34" fill="none" stroke="#E8F7F5" strokeWidth="8" />
                     <circle
-                      cx="40" cy="40" r="34"
+                      cx="40"
+                      cy="40"
+                      r="34"
                       fill="none"
                       stroke={scoreColor}
                       strokeWidth="8"
@@ -412,11 +495,16 @@ export default function SpeechDemoModal({ onClose }: Props) {
                   </div>
                 </div>
                 <div>
-                  <p className="font-display text-2xl font-900" style={{ color: scoreColor }}>{scoreLabel}</p>
+                  <p className="font-display text-2xl font-900" style={{ color: scoreColor }}>
+                    {scoreLabel}
+                  </p>
                   <p className="text-sm text-muted-foreground">Оценка произношения</p>
                   <div className="flex gap-1.5 mt-2">
                     {result.phonemes.map((p) => (
-                      <span key={p} className="text-xs px-2 py-0.5 rounded-full bg-secondary font-600 text-primary">
+                      <span
+                        key={p}
+                        className="text-xs px-2 py-0.5 rounded-full bg-secondary font-600 text-primary"
+                      >
                         {p}
                       </span>
                     ))}
@@ -427,12 +515,24 @@ export default function SpeechDemoModal({ onClose }: Props) {
               {/* Tip */}
               <div className="bg-secondary rounded-2xl px-5 py-4 flex gap-3 items-start">
                 <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                  <svg
+                    className="w-4 h-4 text-primary"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                    />
                   </svg>
                 </div>
                 <div>
-                  <p className="text-xs font-700 text-primary uppercase tracking-wider mb-1">Совет AI</p>
+                  <p className="text-xs font-700 text-primary uppercase tracking-wider mb-1">
+                    Совет AI
+                  </p>
                   <p className="text-sm text-foreground leading-relaxed">{result.tip}</p>
                 </div>
               </div>

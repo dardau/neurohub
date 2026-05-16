@@ -34,14 +34,26 @@ export default function CTASection() {
   };
 
   return (
-    <section id="cta" className="py-20 bg-primary text-white">
-      <div className="max-w-2xl mx-auto px-5 text-center">
+    <section
+      id="cta"
+      className="relative py-24 text-white overflow-hidden bg-gradient-to-br from-primary via-primary to-accent"
+    >
+      <div
+        className="absolute inset-0 opacity-[0.15] pointer-events-none"
+        style={{
+          backgroundImage:
+            'radial-gradient(circle at 20% 30%, rgba(255,255,255,0.6) 0, transparent 40%), radial-gradient(circle at 80% 70%, rgba(255,255,255,0.4) 0, transparent 45%)',
+        }}
+      />
+      <div className="absolute inset-0 tech-grid opacity-20 pointer-events-none" />
+
+      <div className="relative max-w-2xl mx-auto px-5 text-center">
         <h2 className="text-[clamp(1.75rem,4vw,2.5rem)] font-bold leading-tight mb-4">
           Готовы стереть границы терапии?
         </h2>
         <p className="text-white/85 text-base leading-relaxed mb-8 max-w-lg mx-auto">
-          Присоединяйтесь к закрытому пилотному тестированию с клиниками и волонтёрами —
-          первыми внедрите ИИ-реабилитацию в Казахстане.
+          Присоединяйтесь к закрытому пилотному тестированию с клиниками и волонтёрами — первыми
+          внедрите ИИ-реабилитацию в Казахстане.
         </p>
 
         <div className="mb-8 rounded-2xl bg-white p-5 max-w-md mx-auto text-left shadow-md">
@@ -76,7 +88,10 @@ export default function CTASection() {
           >
             <div className="flex flex-col gap-4">
               <div>
-                <label htmlFor="lead-email" className="block text-sm font-medium text-foreground mb-1.5">
+                <label
+                  htmlFor="lead-email"
+                  className="block text-sm font-medium text-foreground mb-1.5"
+                >
                   Email
                 </label>
                 <input
@@ -98,7 +113,10 @@ export default function CTASection() {
               </div>
 
               <div>
-                <label htmlFor="lead-role" className="block text-sm font-medium text-foreground mb-1.5">
+                <label
+                  htmlFor="lead-role"
+                  className="block text-sm font-medium text-foreground mb-1.5"
+                >
                   Ваша роль
                 </label>
                 <select
@@ -117,7 +135,7 @@ export default function CTASection() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="btn-primary w-full justify-center py-3.5 text-base disabled:opacity-60"
+                className="w-full justify-center py-3.5 px-6 rounded-xl bg-foreground text-white font-semibold text-base hover:bg-foreground/90 transition-colors shadow-lg disabled:opacity-60 flex items-center"
               >
                 {isSubmitting ? 'Отправка…' : 'Запросить ранний доступ'}
               </button>
@@ -125,7 +143,19 @@ export default function CTASection() {
           </form>
         )}
 
-        <p className="text-white/50 text-xs mt-6">
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-white/70">
+          <a href="#" className="hover:text-white underline-offset-2 hover:underline">
+            Политика конфиденциальности
+          </a>
+          <span className="w-1 h-1 rounded-full bg-white/30" />
+          <a href="#cta" className="hover:text-white underline-offset-2 hover:underline">
+            Контакты
+          </a>
+          <span className="w-1 h-1 rounded-full bg-white/30" />
+          <span>© 2026 NeuroHub AI</span>
+        </div>
+
+        <p className="text-white/50 text-xs mt-3">
           Нажимая кнопку, вы соглашаетесь на обработку email для связи по пилоту.
         </p>
       </div>

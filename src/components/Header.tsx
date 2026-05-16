@@ -8,6 +8,7 @@ import { CONTACTS } from '@/lib/contacts';
 const navLinks = [
   { label: 'Проблема', href: '#problem' },
   { label: 'Экосистема', href: '#ecosystem' },
+  { label: 'Демо-игры', href: '#demo' },
   { label: 'Модули', href: '#modules' },
   { label: 'Инвесторам', href: '#cta' },
 ];
@@ -70,7 +71,7 @@ export default function Header() {
             Вход
           </a>
           <a href="#cta" className="btn-primary text-sm py-2.5 px-5">
-            Ранний доступ
+            Попробовать демо
           </a>
         </div>
 
@@ -126,7 +127,10 @@ export default function Header() {
           </div>
           <div className="flex flex-col gap-3 w-56 mt-2">
             <a href="#cta" className="btn-primary justify-center" onClick={closeMenu}>
-              Ранний доступ
+              Попробовать демо
+            </a>
+            <a href="#demo" className="btn-ghost justify-center" onClick={closeMenu}>
+              Поиграть в демки
             </a>
           </div>
         </div>
