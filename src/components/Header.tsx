@@ -67,10 +67,10 @@ export default function Header() {
           >
             {CONTACTS.phoneDisplay}
           </a>
-          <a href="#cta" className="btn-ghost text-sm">
+          <a href="/login" className="btn-ghost text-sm">
             Вход
           </a>
-          <a href="#cta" className="btn-primary text-sm py-2.5 px-5">
+          <a href="/login" className="btn-primary text-sm py-2.5 px-5">
             Попробовать демо
           </a>
         </div>
@@ -126,7 +126,7 @@ export default function Header() {
             </a>
           </div>
           <div className="flex flex-col gap-3 w-56 mt-2">
-            <a href="#cta" className="btn-primary justify-center" onClick={closeMenu}>
+            <a href="/login" className="btn-primary justify-center" onClick={closeMenu}>
               Попробовать демо
             </a>
             <a href="#demo" className="btn-ghost justify-center" onClick={closeMenu}>
