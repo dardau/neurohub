@@ -32,7 +32,7 @@ import {
 import DashboardShell, { NavItem } from '@/components/dashboard/DashboardShell';
 
 const NAV: NavItem[] = [
-  { label: 'Обзор', href: '/dashboard/doctor', Icon: Home },
+  { label: 'Обзор', href: '/dashboard/doctor', Icon: Home, active: true },
   { label: 'Пациенты', href: '/dashboard/doctor', Icon: Users },
   { label: 'Назначения', href: '/dashboard/doctor', Icon: ClipboardList },
   { label: 'Аналитика', href: '/dashboard/doctor', Icon: BarChart3 },

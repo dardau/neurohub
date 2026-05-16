@@ -28,7 +28,7 @@ import DashboardShell, { NavItem } from '@/components/dashboard/DashboardShell';
 import SosModal from '@/components/dashboard/SosModal';
 
 const NAV: NavItem[] = [
-  { label: 'Обзор', href: '/dashboard/parent', Icon: Home },
+  { label: 'Обзор', href: '/dashboard/parent', Icon: Home, active: true },
   { label: 'Расписание', href: '/dashboard/parent', Icon: Calendar },
   { label: 'Дневник', href: '/dashboard/parent', Icon: BookOpen },
   { label: 'Чат с врачом', href: '/dashboard/parent', Icon: MessageCircle },

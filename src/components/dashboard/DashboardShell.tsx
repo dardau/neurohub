@@ -10,6 +10,7 @@ export type NavItem = {
   label: string;
   href: string;
   Icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+  active?: boolean;
 };
 
 type DashboardShellProps = {
@@ -77,10 +78,10 @@ export default function DashboardShell({
 
           <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
             {navItems.map((item) => {
-              const active = pathname === item.href;
+              const active = item.active ?? pathname === item.href;
               return (
                 <Link
-                  key={item.href}
+                  key={item.label}
                   href={item.href}
                   onClick={() => setOpen(false)}
                   className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
